@@ -14,13 +14,9 @@ def email_list_signup(request):
             else:
                 form.save()
         
-        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-
-def homepage(request):
+        return render(request, 'main/home.html', {"form":form})
+    
     form = EmailSignupForm()
-    
-    context = {
-        'form': form
-    }
-    
-    return render(request, 'main/home.html', context)
+    return render(request,
+                  "main/home.html",
+                   {"form":form})
