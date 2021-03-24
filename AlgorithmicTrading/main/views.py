@@ -8,14 +8,14 @@ def email_list_signup(request):
     form = EmailForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
-            email_signup_qs = Signup.objects.filter(email=form.instance.email)
+            email_signup_qs = Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker)
             if email_signup_qs.exists():
-                messages.error(request, "EMAIL ALREADY EXISTS!")
+                messages.error(request, "TICKER ALREADY REGISTERED WITH EMAIL!")
             else:
                 form.save()
-                messages.info(request, "EMAIL SUCCESSFULLY ADDED!")
+                messages.info(request, "INFO SUCCESSFULLY ADDED!")
         else:
-            messages.error(request, "AN ERROR OCCURED, PLEASE MAKE SURE THE EMAIL IS FORMATTED CORRECTLY!")
+            messages.error(request, "AN ERROR OCCURED, PLEASE MAKE SURE INFORMATION IS FORMATTED CORRECTLY!")
         
         return redirect("main:signup")
     
@@ -28,13 +28,13 @@ def email_list_unsubscribe(request):
     form = EmailForm(request.POST or None)
     if request.method == "POST":
             if form.is_valid():
-                email_unsubscribe_qs = Signup.objects.filter(email=form.instance.email)
+                email_unsubscribe_qs = Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker)
                 if email_unsubscribe_qs.exists():
-                    Signup.objects.filter(email=form.instance.email).delete()
-                    messages.info(request, "EMAIL SUCCESSFULLY DELETED")
+                    Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker).delete()
+                    messages.info(request, "INFO SUCCESSFULLY DELETED")
                     return redirect("main:signup")
                 else:
-                    messages.error(request, "EMAIL DOES NOT EXIST!")
+                    messages.error(request, "EMAIL/TICKER COMBO DOES NOT EXIST!")
                     return redirect("main:unsubscribe")
             else:
                 messages.error(request, "PLEASE MAKE SURE THE EMAIL IS FORMATTED CORRECTLY!")
