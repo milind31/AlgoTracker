@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from .forms import EmailSignupForm
@@ -10,11 +10,14 @@ def email_list_signup(request):
         if form.is_valid():
             email_signup_qs = Signup.objects.filter(email=form.instance.email)
             if email_signup_qs.exists():
-                messages.info(request, "EMAIL ALREADY EXISTS")
+                messages.error(request, "EMAIL ALREADY EXISTS!")
             else:
                 form.save()
+                messages.info(request, "EMAIL SUCCESSFULLY ADDED!")
+        else:
+            messages.error(request, "AN ERROR OCCURED, PLEASE MAKE SURE THE EMAIL IS FORMATTED CORRECTLY!")
         
-        return render(request, 'main/home.html', {"form":form})
+        return redirect("main:homepage")
     
     form = EmailSignupForm()
     return render(request,
