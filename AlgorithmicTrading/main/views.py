@@ -3,11 +3,15 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from .forms import EmailForm
 from .models import Signup
+from .yfinance import is_valid_ticker
 
 def email_list_signup(request):
     form = EmailForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
+            if is_valid_ticker(form.instance.ticker) == False:
+                messages.error(request, "INVALID TICKER")
+                return redirect("main:signup")
             email_signup_qs = Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker)
             if email_signup_qs.exists():
                 messages.error(request, "TICKER ALREADY REGISTERED WITH EMAIL!")
