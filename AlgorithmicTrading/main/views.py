@@ -17,9 +17,13 @@ def email_list_signup(request):
         else:
             messages.error(request, "AN ERROR OCCURED, PLEASE MAKE SURE THE EMAIL IS FORMATTED CORRECTLY!")
         
-        return redirect("main:homepage")
+        return redirect("main:signup")
     
     form = EmailSignupForm()
     return render(request,
-                  "main/home.html",
+                  "main/signup.html",
                    {"form":form})
+
+def email_list_unsubscribe(request):
+    return render(request,
+                  "main/unsubscribe.html")
