@@ -32,12 +32,14 @@ def email_list_unsubscribe(request):
                 if email_unsubscribe_qs.exists():
                     Signup.objects.filter(email=form.instance.email).delete()
                     messages.info(request, "EMAIL SUCCESSFULLY DELETED")
+                    return redirect("main:signup")
                 else:
                     messages.error(request, "EMAIL DOES NOT EXIST!")
+                    return redirect("main:unsubscribe")
             else:
                 messages.error(request, "PLEASE MAKE SURE THE EMAIL IS FORMATTED CORRECTLY!")
-            
-            return redirect("main:unsubscribe")
+                return redirect("main:unsubscribe")
+        
 
     form = EmailForm()
     return render(request,
