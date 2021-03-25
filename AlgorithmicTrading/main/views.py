@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from .forms import EmailForm
+from .forms import EmailForm, StockHistoryForm
 from .models import Signup
 from .yfinance import is_valid_ticker
 
@@ -9,12 +9,12 @@ def email_list_signup(request):
     form = EmailForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
-            if is_valid_ticker(form.instance.ticker) == False:
-                messages.error(request, "INVALID TICKER")
-                return redirect("main:signup")
             email_signup_qs = Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker)
             if email_signup_qs.exists():
                 messages.error(request, "TICKER ALREADY REGISTERED WITH EMAIL!")
+            elif is_valid_ticker(form.instance.ticker) == False:
+                messages.error(request, "INVALID TICKER")
+                return redirect("main:signup")
             else:
                 form.save()
                 messages.info(request, "INFO SUCCESSFULLY ADDED!")
@@ -49,3 +49,16 @@ def email_list_unsubscribe(request):
     return render(request,
                   "main/unsubscribe.html",
                    {"form":form})
+
+def homepage(request):
+    form = StockHistoryForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            if is_valid_ticker(form.instance.ticker) == False:
+                messages.error(request, "INVALID TICKER")
+                return redirect("main:homepage")
+    
+    form = StockHistoryForm()
+    return render(request,
+                  "main/home.html",
+                  {'form':form})

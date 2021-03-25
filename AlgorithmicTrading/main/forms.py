@@ -5,3 +5,8 @@ class EmailForm(forms.ModelForm):
     class Meta:
         model = Signup
         fields = ('email', 'ticker')
+
+class StockHistoryForm(forms.ModelForm):
+    class Meta:
+        model = Signup
+        fields = ('ticker',)

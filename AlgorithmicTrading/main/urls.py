@@ -19,6 +19,7 @@ from . import views
 app_name = "main"
 
 urlpatterns = [
-    path("", views.email_list_signup, name="signup"),
+    path("", views.homepage, name="homepage"),
+    path("subscribe/", views.email_list_signup, name="signup"),
     path("unsubscribe/", views.email_list_unsubscribe, name="unsubscribe")
 ]
