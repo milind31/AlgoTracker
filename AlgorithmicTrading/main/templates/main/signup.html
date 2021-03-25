@@ -8,15 +8,18 @@
 </head>
 
 <body>
+    {% include "main/includes/navbar.html" %}
+    <br/>
     <div class="container">
     <h2>Sign Up!</h2>
+    <p>Enter your email and ticker you would like to subscribe to below</p>
         <form method="POST">
             {% csrf_token %}
             {{form.as_p}}
 
             <button class="btn" type="submit">Submit</button>
         </form>
-        <a href="unsubscribe/">Unsubscribe</a>
+        <a href="/unsubscribe/">Unsubscribe</a>
     </div>
 
     {% include "main/includes/messages.html" %}
