@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from .forms import EmailForm, StockHistoryForm
 from .models import Signup
 from .yfinance import is_valid_ticker
+from .plots import get_plots
 
 def email_list_signup(request):
     form = EmailForm(request.POST or None)
@@ -57,8 +58,14 @@ def homepage(request):
             if is_valid_ticker(form.instance.ticker) == False:
                 messages.error(request, "INVALID TICKER")
                 return redirect("main:homepage")
-    
+            else:
+                buy_sell_graph, gain_loss_graph, total_cash_graph = get_plots(form.instance.ticker)
+                return render(request,
+                              "main/home.html",
+                              {'form':form, 'buy_sell_graph':buy_sell_graph, 'gain_loss_graph':gain_loss_graph, 'total_cash_graph':total_cash_graph})
+                
     form = StockHistoryForm()
     return render(request,
                   "main/home.html",
                   {'form':form})
+
