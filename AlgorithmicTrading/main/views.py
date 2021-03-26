@@ -59,10 +59,10 @@ def homepage(request):
                 messages.error(request, "INVALID TICKER")
                 return redirect("main:homepage")
             else:
-                buy_sell_graph, gain_loss_graph, total_cash_graph = get_plots(form.instance.ticker)
+                buy_sell_graph, gain_loss_graph, total_cash_graph, total_cash_buy_hold_graph = get_plots(form.instance.ticker)
                 return render(request,
-                              "main/home.html",
-                              {'form':form, 'buy_sell_graph':buy_sell_graph, 'gain_loss_graph':gain_loss_graph, 'total_cash_graph':total_cash_graph})
+                              "main/homewithplots.html",
+                              {'form':form, 'buy_sell_graph':buy_sell_graph, 'gain_loss_graph':gain_loss_graph, 'total_cash_graph':total_cash_graph, 'total_cash_buy_hold_graph':total_cash_buy_hold_graph})
                 
     form = StockHistoryForm()
     return render(request,

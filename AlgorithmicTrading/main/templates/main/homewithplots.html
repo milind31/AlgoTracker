@@ -29,6 +29,22 @@
 
         <a href="subscribe/" style="padding-bottom: 200px;">Click here to subscribe to be notified when to buy a stock based on the algorithm!</a>
 
+        <div style="width:1000;height:500">
+            {{ buy_sell_graph|safe }}
+        </div>
+
+        <div style="width:1000;height:500">
+            {{ gain_loss_graph|safe }}
+        </div>
+
+        <div style="width:1000;height:500">
+            {{ total_cash_graph|safe }}
+        </div>
+
+        <div style="width:1000;height:500">
+            {{ total_cash_buy_hold_graph|safe }}
+        </div>
+
     </div>
 
     {% include "main/includes/messages.html" %}

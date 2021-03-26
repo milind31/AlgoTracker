@@ -119,15 +119,25 @@ def get_plots(ticker):
                         )
     
     total_cash_fig = px.line(data_frame= df,x='sell_dates', y='a',
-                        title="*Total Cash After Each Sell ($10,000 Initial Investment)",
+                        title="Total Cash After Each Sell ($10,000 Initial Investment)",
                         labels={
                             "sell_dates": "Date",
                             "a": "Cash",
                         }
                         )
+    shares_bought = math.floor(10000 / hist['Close'][0])
+    leftover_cash = 10000 -  (shares_bought * hist['Close'][0])
+    total_cash_buy_hold_fig = px.line(x=hist['Date'], y=shares_bought * hist['Close'] + leftover_cash,
+              title="Total Cash with Buy Hold Strategy Instead ($10,000 Initial Investment)",
+              labels={
+                'x':"Date",
+                'y':"Total Cash"
+              }
+              )
 
     buy_sell_graph = plotly.offline.plot(buy_sell_fig, auto_open = False, output_type="div")
     gain_loss_graph = plotly.offline.plot(gain_loss_fig, auto_open = False, output_type="div")
     total_cash_graph = plotly.offline.plot(total_cash_fig, auto_open = False, output_type="div")
+    total_cash_buy_hold_graph = plotly.offline.plot(total_cash_buy_hold_fig, auto_open = False, output_type="div")
 
-    return buy_sell_graph, gain_loss_graph, total_cash_graph
+    return buy_sell_graph, gain_loss_graph, total_cash_graph, total_cash_buy_hold_graph
