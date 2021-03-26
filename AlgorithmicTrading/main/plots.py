@@ -128,7 +128,7 @@ def get_plots(ticker):
     shares_bought = math.floor(10000 / hist['Close'][0])
     leftover_cash = 10000 -  (shares_bought * hist['Close'][0])
     total_cash_buy_hold_fig = px.line(x=hist['Date'], y=shares_bought * hist['Close'] + leftover_cash,
-              title="Total Cash with Buy Hold Strategy Instead ($10,000 Initial Investment)",
+              title="Total Cash with Buy Hold Strategy ($10,000 Initial Investment)",
               labels={
                 'x':"Date",
                 'y':"Total Cash"
