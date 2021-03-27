@@ -79,7 +79,8 @@ def get_plots(ticker):
         pct_changes.append((net_gain_or_loss/buy_prices[i])*100)
 
     buy_sell_fig = px.line(hist, x="Date", y="Close", title='Historical Buy/Sell Graph for {}'.format(ticker))
-    buy_sell_fig.add_trace(go.Scatter(
+    buy_sell_fig.add_trace(
+        go.Scatter(
         x=sell_dates,
         y=sell_prices,
         mode='markers',
@@ -90,7 +91,8 @@ def get_plots(ticker):
         ),
         name='Sell')
     )
-    buy_sell_fig.add_trace(go.Scatter(
+    buy_sell_fig.add_trace(
+        go.Scatter(
         x=buy_dates,
         y=buy_prices,
         mode='markers',
@@ -105,18 +107,18 @@ def get_plots(ticker):
     outcomes = ["Gain" if pct_change > 0 else "Loss" for pct_change in pct_changes]
     df = pd.DataFrame({'a':cash, 'sell_dates':sell_dates, 'pct_changes':pct_changes, 'outcomes':outcomes})
     gain_loss_fig = px.scatter(data_frame= df,x='sell_dates', y='pct_changes',
-                        color='outcomes',
-                        title="Percent Gain/Loss for Trades",
-                        labels={
-                        "sell_dates": "Date",
-                        "pct_changes": "Percent Gain/Loss",
-                        "outcomes": "",
-                        "a": "Total Cash"
-                        },
-                        size_max=10,
-                        size=[1 for i in sell_dates],
-                        hover_data="a"
-                        )
+                               color='outcomes',
+                               title="Percent Gain/Loss for Trades",
+                               labels={
+                               "sell_dates": "Date",
+                               "pct_changes": "Percent Gain/Loss",
+                               "outcomes": "",
+                               "a": "Total Cash"
+                               },
+                               size_max=10,
+                               size=[1 for i in sell_dates],
+                               hover_data="a"
+                               )
     
     total_cash_fig = px.line(data_frame= df,x='sell_dates', y='a',
                         title="Total Cash After Each Sell ($10,000 Initial Investment)",
@@ -125,15 +127,16 @@ def get_plots(ticker):
                             "a": "Cash",
                         }
                         )
+
     shares_bought = math.floor(10000 / hist['Close'][0])
     leftover_cash = 10000 -  (shares_bought * hist['Close'][0])
     total_cash_buy_hold_fig = px.line(x=hist['Date'], y=shares_bought * hist['Close'] + leftover_cash,
-              title="Total Cash with Buy Hold Strategy ($10,000 Initial Investment)",
-              labels={
-                'x':"Date",
-                'y':"Total Cash"
-              }
-              )
+                                      title="Total Cash with Buy Hold Strategy ($10,000 Initial Investment)",
+                                      labels={
+                                          'x':"Date",
+                                          'y':"Total Cash"
+                                      }
+                                      )
 
     buy_sell_graph = plotly.offline.plot(buy_sell_fig, auto_open = False, output_type="div")
     gain_loss_graph = plotly.offline.plot(gain_loss_fig, auto_open = False, output_type="div")
