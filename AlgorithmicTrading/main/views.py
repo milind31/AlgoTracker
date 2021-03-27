@@ -10,9 +10,9 @@ def email_list_signup(request):
     form = EmailForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
-            email_signup_qs = Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker)
+            email_signup_qs = Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker, strategy=form.instance.strategy)
             if email_signup_qs.exists():
-                messages.error(request, "TICKER ALREADY REGISTERED WITH EMAIL!")
+                messages.error(request, "TICKER/STRATEGY ALREADY REGISTERED WITH EMAIL!")
             elif is_valid_ticker(form.instance.ticker) == False:
                 messages.error(request, "INVALID TICKER")
                 return redirect("main:signup")
@@ -33,13 +33,13 @@ def email_list_unsubscribe(request):
     form = EmailForm(request.POST or None)
     if request.method == "POST":
             if form.is_valid():
-                email_unsubscribe_qs = Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker)
+                email_unsubscribe_qs = Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker, strategy=form.instance.strategy)
                 if email_unsubscribe_qs.exists():
-                    Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker).delete()
+                    Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker, strategy=form.instance.strategy).delete()
                     messages.info(request, "INFO SUCCESSFULLY DELETED")
-                    return redirect("main:signup")
+                    return redirect("main:unsubscribe")
                 else:
-                    messages.error(request, "EMAIL/TICKER COMBO DOES NOT EXIST!")
+                    messages.error(request, "EMAIL/TICKER/STRATEGY COMBO DOES NOT EXIST!")
                     return redirect("main:unsubscribe")
             else:
                 messages.error(request, "PLEASE MAKE SURE THE EMAIL IS FORMATTED CORRECTLY!")

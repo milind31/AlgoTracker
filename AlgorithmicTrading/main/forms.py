@@ -4,7 +4,7 @@ from .models import Signup
 class EmailForm(forms.ModelForm):
     class Meta:
         model = Signup
-        fields = ('email', 'ticker')
+        fields = ('email', 'ticker', 'strategy')
 
 class StockHistoryForm(forms.ModelForm):
     class Meta:
