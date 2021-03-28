@@ -1,0 +1,14 @@
+.strategies .strategy {
+    padding-top: 1px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    margin-right: 485px;
+    margin-bottom: 50px;
+    box-shadow: 0 3px 3px rgba(0,0,0,0.05);
+    transition: box-shadow 0.5s ease-in-out;
+  }
+
+  .strategies .strategy:hover {
+    box-shadow: 0 6px 6px rgba(0,0,0,0.15);
+    transition: box-shadow 0.5s ease-in-out;
+  }

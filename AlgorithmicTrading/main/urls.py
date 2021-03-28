@@ -19,7 +19,8 @@ from . import views
 app_name = "main"
 
 urlpatterns = [
-    path("", views.homepage, name="homepage"),
+    path("", views.home, name="home"),
+    path("atrlimitorder/", views.atrlimitorder, name="atrlimitorder"),
     path("subscribe/", views.email_list_signup, name="signup"),
     path("unsubscribe/", views.email_list_unsubscribe, name="unsubscribe")
 ]
