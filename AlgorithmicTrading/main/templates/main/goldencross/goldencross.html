@@ -1,0 +1,48 @@
+<head>
+    {% load static %}
+    <link href="{% static 'tinymce/css/prism.css' %}" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link href="{% static 'main/css/materialize.css' %}" rel="stylesheet">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+    {% include "main/includes/navbar.html" %}
+    <div class="container">
+        <h1>Golden Cross</h1>
+        <h3>How it works:</h3>
+        <p>This strategy is one of the most basic and fundamental trading strategies ever. This video does a good job describing it:</p>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/6mckJdktXkc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>        
+        <p><strong>We can summarize our strategy with the following rules:</strong></p>
+        <p>1. Buy when <a href="https://www.investopedia.com/terms/s/sma.asp">SMA-50</a> crosses over SMA-200 </p>
+        <p>2. Sell when SMA-200 crosses over SMA-50</p>
+        <img class="responsive-img" src="../../static/goldencross.png" style="width:750px;height:450px;">
+        <p><strong>What I like about the strategy:</strong></p>
+            <li>Very basic and easy to understand</li>
+            <li>Good for riding massive trends</li>
+            <li>Investments don't happen too often, so we have freedom to make other trades</li>
+        <p><strong>What I dislike about the strategy:</strong></p>
+            <li>Too basic</li>
+            <li>Very possible to miss out on good portions of trends</li>
+        <p><strong>Suggestions:</strong></p>
+            <li>Try this out on steadily growing stocks</li>
+        <h3 style="padding-top: 35px;">Test it out for yourself:</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+
+            <button class="btn" type="submit">View Performance</button>
+        </form>
+
+        <a href="subscribe/" style="padding-bottom: 200px;">Click here to subscribe to be notified when to buy a stock based on the algorithm!</a>
+
+    </div>
+
+    {% include "main/includes/messages.html" %}
+</body>
+
+
+<script src="{% static 'tinymce/js/prism.js"></script>
+<script>M.AutoInit();</script>

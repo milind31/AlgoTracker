@@ -1,0 +1,46 @@
+<head>
+    {% load static %}
+    <link href="{% static 'tinymce/css/prism.css' %}" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link href="{% static 'main/css/materialize.css' %}" rel="stylesheet">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+    {% include "main/includes/navbar.html" %}
+    <div class="container">
+        <h3 style="padding-top: 35px;">Test it out for yourself:</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+
+            <button class="btn" type="submit">View Performance</button>
+        </form>
+
+        <div style="width:1000;height:500">
+            {{ buy_sell_graph|safe }}
+        </div>
+
+        <div style="width:1000;height:500">
+            {{ gain_loss_graph|safe }}
+        </div>
+
+        <div style="width:1000;height:500">
+            {{ total_cash_graph|safe }}
+        </div>
+
+        <div style="width:1000;height:500">
+            {{ total_cash_buy_hold_graph|safe }}
+        </div>
+
+        <a href="subscribe/" style="padding-bottom: 200px;">Click here to subscribe to be notified when to buy a stock based on the algorithm!</a>
+
+    </div>
+
+    {% include "main/includes/messages.html" %}
+</body>
+
+
+<script src="{% static 'tinymce/js/prism.js"></script>
+<script>M.AutoInit();</script>

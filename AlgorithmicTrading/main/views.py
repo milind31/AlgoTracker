@@ -59,18 +59,36 @@ def atrlimitorder(request):
                 messages.error(request, "INVALID TICKER")
                 return redirect("main:atrlimitorder")
             else:
-                buy_sell_graph, gain_loss_graph, total_cash_graph, total_cash_buy_hold_graph = get_plots(form.instance.ticker)
+                buy_sell_graph, gain_loss_graph, total_cash_graph, total_cash_buy_hold_graph = get_plots(form.instance.ticker, 'ATR')
                 return render(request,
-                              "main/atrlimitorderplots.html",
+                              "main/atrlimitorder/atrlimitorderplots.html",
                               {'form':form, 'buy_sell_graph':buy_sell_graph, 'gain_loss_graph':gain_loss_graph, 'total_cash_graph':total_cash_graph, 'total_cash_buy_hold_graph':total_cash_buy_hold_graph})
                 
     form = StockHistoryForm()
     return render(request,
-                  "main/atrlimitorder.html",
+                  "main/atrlimitorder/atrlimitorder.html",
                   {'form':form})
 
 
+def goldencross(request):
+    form = StockHistoryForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            if is_valid_ticker(form.instance.ticker) == False:
+                messages.error(request, "INVALID TICKER")
+                return redirect("main:goldencross")
+            else:
+                buy_sell_graph, gain_loss_graph, total_cash_graph, total_cash_buy_hold_graph = get_plots(form.instance.ticker, 'GC')
+                return render(request,
+                              "main/goldencross/goldencrossplots.html",
+                              {'form':form, 'buy_sell_graph':buy_sell_graph, 'gain_loss_graph':gain_loss_graph, 'total_cash_graph':total_cash_graph, 'total_cash_buy_hold_graph':total_cash_buy_hold_graph})
+                
+    form = StockHistoryForm()
+    return render(request,
+                  "main/goldencross/goldencross.html",
+                  {'form':form})
+
 def home(request):
     return render(request,
-                  "main/home.html")
+                  "main/strategies.html")
 

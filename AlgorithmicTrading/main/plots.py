@@ -7,69 +7,7 @@ import backtrader as bt
 import pandas as pd
 from datetime import datetime, timedelta
 
-def get_plots(ticker):
-    stock_data = yf.Ticker(ticker)
-    hist = stock_data.history(period="MAX")
-
-    sell_dates = []
-    buy_dates = []
-    cash = []
-    
-    class YT1(bt.Strategy):
-        params = (('n', 50), ('order_percentage', 1))
-        
-        def log(self, txt, order_type, dt=None):
-            dt = dt or self.datas[0].datetime.date(0)
-            if order_type == 'Buy':
-                buy_dates.append(dt.isoformat())
-            elif order_type == 'Sell':
-                sell_dates.append(dt.isoformat())
-                cash.append(self.broker.cash)
-        
-        def __init__(self):
-            self.n_day_high = bt.ind.Highest(self.data.high, period=65)
-            self.atr = bt.indicators.ATR(self.datas[0]) * 2
-            
-        def notify_order(self, order):
-            if order.status in [order.Submitted, order.Accepted]:
-                return
-            
-            if order.status in [order.Completed]:
-                if order.isbuy():
-                    self.log('BUY EXECUTED {}'.format(order.executed.price), 'Buy')
-                elif order.issell():
-                    self.log('SELL EXECUTED {}'.format(order.executed.price), 'Sell')
-                self.bar_executed = len(self)
-
-            self.order = None
-        
-        def next(self):
-            if self.position.size == 0:
-                if self.data.close[0] > self.n_day_high[-1]:
-                    amount_to_invest = (self.params.order_percentage * self.broker.cash)
-                    self.size = math.floor(amount_to_invest / self.data.close) #order size
-                    buy_price = self.data.low[0] - self.atr[0]
-                    self.buy_order = self.buy(size=self.size, exectype=bt.Order.Limit, #place buy order
-                            price=buy_price,
-                            valid=self.datetime.date(ago=0) + timedelta(days=10))
-
-            if self.position.size > 0:   
-                sell = True
-                for i in range(1,50):
-                    neg_i = i * -1
-                    if self.data.close[0] < self.data.close[neg_i]:
-                        sell = False
-                if sell == True:
-                    self.close()
-
-
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(10000)
-    feed = bt.feeds.PandasData(dataname=hist)
-    cerebro.adddata(feed)
-    cerebro.addstrategy(YT1)
-    cerebro.run()
-
+def make_plots(sell_dates, buy_dates, cash, ticker, hist):
     hist['Date'] = hist.index #create date column from dataframe index
     sell_prices = [hist['Close'][date] for date in sell_dates]
     buy_prices = [hist['Close'][date] for date in buy_dates]
@@ -144,3 +82,120 @@ def get_plots(ticker):
     total_cash_buy_hold_graph = plotly.offline.plot(total_cash_buy_hold_fig, auto_open = False, output_type="div")
 
     return buy_sell_graph, gain_loss_graph, total_cash_graph, total_cash_buy_hold_graph
+
+
+def get_plots(ticker, strategy):
+    stock_data = yf.Ticker(ticker)
+    hist = stock_data.history(period="MAX")
+
+    sell_dates = []
+    buy_dates = []
+    cash = []
+    
+    #define strategies
+    class ATR(bt.Strategy):
+        params = (('n', 50), ('order_percentage', 1))
+        
+        def log(self, txt, order_type, dt=None):
+            dt = dt or self.datas[0].datetime.date(0)
+            if order_type == 'Buy':
+                buy_dates.append(dt.isoformat())
+            elif order_type == 'Sell':
+                sell_dates.append(dt.isoformat())
+                cash.append(self.broker.cash)
+        
+        def __init__(self):
+            self.n_day_high = bt.ind.Highest(self.data.high, period=65)
+            self.atr = bt.indicators.ATR(self.datas[0]) * 2
+            
+        def notify_order(self, order):
+            if order.status in [order.Submitted, order.Accepted]:
+                return
+            
+            if order.status in [order.Completed]:
+                if order.isbuy():
+                    self.log('BUY EXECUTED {}'.format(order.executed.price), 'Buy')
+                elif order.issell():
+                    self.log('SELL EXECUTED {}'.format(order.executed.price), 'Sell')
+                self.bar_executed = len(self)
+
+            self.order = None
+        
+        def next(self):
+            if self.position.size == 0:
+                if self.data.close[0] > self.n_day_high[-1]:
+                    amount_to_invest = (self.params.order_percentage * self.broker.cash)
+                    self.size = math.floor(amount_to_invest / self.data.close) #order size
+                    buy_price = self.data.low[0] - self.atr[0]
+                    self.buy_order = self.buy(size=self.size, exectype=bt.Order.Limit, #place buy order
+                            price=buy_price,
+                            valid=self.datetime.date(ago=0) + timedelta(days=10))
+
+            if self.position.size > 0:   
+                sell = True
+                for i in range(1,50):
+                    neg_i = i * -1
+                    if self.data.close[0] < self.data.close[neg_i]:
+                        sell = False
+                if sell == True:
+                    self.close()
+
+    class GoldenCross(bt.Strategy):
+        params = (('fast', 50), ('slow', 200), ('order_percentage', 1), ('ticker', 'VOO'))
+        
+        def log(self, txt, order_type, dt=None):
+            dt = dt or self.datas[0].datetime.date(0)
+            if order_type == 'Buy':
+                buy_dates.append(dt.isoformat())
+            elif order_type == 'Sell':
+                sell_dates.append(dt.isoformat())
+                cash.append(self.broker.cash)
+
+        def __init__(self):
+            self.fast_moving_average = bt.indicators.SMA(self.data.close,
+                                                        period = self.params.fast,
+                                                        plotname = 'SMA {}'.format(self.params.fast))
+            self.slow_moving_average = bt.indicators.SMA(self.data.close,
+                                                        period = self.params.slow,
+                                                        plotname = 'SMA {}'.format(self.params.slow))
+            self.crossover = bt.indicators.CrossOver(self.fast_moving_average, self.slow_moving_average)
+        
+        def notify_order(self, order):
+            if order.status in [order.Submitted, order.Accepted]:
+                return
+            
+            if order.status in [order.Completed]:
+                if order.isbuy():
+                    self.log('BUY EXECUTED {}'.format(order.executed.price), 'Buy')
+                elif order.issell():
+                    self.log('SELL EXECUTED {}'.format(order.executed.price), 'Sell')
+                self.bar_executed = len(self)
+
+            self.order = None
+        
+        def next(self):
+            if self.position.size == 0:
+                if self.crossover > 0:
+                    amount_to_invest = (self.params.order_percentage * self.broker.cash)
+                    self.size = math.floor(amount_to_invest / self.data.close)
+                    
+                    print("BUY {} SHARES OF {} AT {} on {}".format(self.size, self.params.ticker, round(self.data.close[0],2), self.datetime.date(ago=0)))
+                    
+                    self.buy(size=self.size)
+            
+            if self.position.size > 0:
+                if self.crossover < 0:
+                    print("SELL {} SHARES OF {} AT {} on {}".format(self.size, self.params.ticker, round(self.data.close[0],2), self.datetime.date(ago=0)))
+                    self.close()
+
+    cerebro = bt.Cerebro()
+    cerebro.broker.set_cash(10000)
+    feed = bt.feeds.PandasData(dataname=hist)
+    cerebro.adddata(feed)
+    if strategy == "ATR":
+        cerebro.addstrategy(ATR)
+    elif strategy == "GC":
+        cerebro.addstrategy(GoldenCross)
+    cerebro.run()
+
+    return make_plots(sell_dates, buy_dates, cash, ticker, hist)

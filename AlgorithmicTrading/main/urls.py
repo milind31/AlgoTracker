@@ -20,6 +20,7 @@ app_name = "main"
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("goldencross/", views.goldencross, name="goldencross"),
     path("atrlimitorder/", views.atrlimitorder, name="atrlimitorder"),
     path("subscribe/", views.email_list_signup, name="signup"),
     path("unsubscribe/", views.email_list_unsubscribe, name="unsubscribe")
