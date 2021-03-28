@@ -46,6 +46,7 @@ def make_plots(sell_dates, buy_dates, cash, ticker, hist):
     df = pd.DataFrame({'a':cash, 'sell_dates':sell_dates, 'pct_changes':pct_changes, 'outcomes':outcomes})
     gain_loss_fig = px.scatter(data_frame= df,x='sell_dates', y='pct_changes',
                                color='outcomes',
+                               color_discrete_map={'Gain': '#7386e6', 'Loss':'red'},
                                title="Percent Gain/Loss for Trades",
                                labels={
                                "sell_dates": "Date",
