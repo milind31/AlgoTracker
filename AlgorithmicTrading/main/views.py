@@ -61,12 +61,12 @@ def atrlimitorder(request):
             else:
                 buy_sell_graph, gain_loss_graph, total_cash_graph, total_cash_buy_hold_graph = get_plots(form.instance.ticker, 'ATR')
                 return render(request,
-                              "main/atrlimitorder/atrlimitorderplots.html",
+                              "main/strategies/atrlimitorder/atrlimitorderplots.html",
                               {'form':form, 'buy_sell_graph':buy_sell_graph, 'gain_loss_graph':gain_loss_graph, 'total_cash_graph':total_cash_graph, 'total_cash_buy_hold_graph':total_cash_buy_hold_graph})
                 
     form = StockHistoryForm()
     return render(request,
-                  "main/atrlimitorder/atrlimitorder.html",
+                  "main/strategies/atrlimitorder/atrlimitorder.html",
                   {'form':form})
 
 
@@ -80,12 +80,12 @@ def goldencross(request):
             else:
                 buy_sell_graph, gain_loss_graph, total_cash_graph, total_cash_buy_hold_graph = get_plots(form.instance.ticker, 'GC')
                 return render(request,
-                              "main/goldencross/goldencrossplots.html",
+                              "main/strategies/goldencross/goldencrossplots.html",
                               {'form':form, 'buy_sell_graph':buy_sell_graph, 'gain_loss_graph':gain_loss_graph, 'total_cash_graph':total_cash_graph, 'total_cash_buy_hold_graph':total_cash_buy_hold_graph})
                 
     form = StockHistoryForm()
     return render(request,
-                  "main/goldencross/goldencross.html",
+                  "main/strategies/goldencross/goldencross.html",
                   {'form':form})
 
 def home(request):
