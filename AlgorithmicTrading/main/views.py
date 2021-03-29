@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.core.mail import send_mail
 from .forms import EmailForm, StockHistoryForm
 from .models import Signup
 from .yfinance import is_valid_ticker
 from .plots import get_plots
+from .emails import send_email
 
 def email_list_signup(request):
     form = EmailForm(request.POST or None)
@@ -89,6 +91,7 @@ def goldencross(request):
                   {'form':form})
 
 def home(request):
+    send_email('vaweh87704@dwgtcm.com', 'QQQ', 'GC')
     return render(request,
                   "main/strategies.html")
 
