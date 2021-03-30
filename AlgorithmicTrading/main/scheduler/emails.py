@@ -67,7 +67,6 @@ def send_email(email, ticker, strategy):
             
             if self.position.size > 0:
                 if self.crossover < 0:
-                    print("SELL {} SHARES OF {} AT {} on {}".format(self.size, self.params.ticker, round(self.data.close[0],2), self.datetime.date(ago=0)))
                     self.close()
                     sell_dates.append(self.datetime.date(ago=0).strftime("%B %d, %Y"))
 
@@ -83,8 +82,8 @@ def send_email(email, ticker, strategy):
         cerebro.addstrategy(GoldenCross)
     cerebro.run()
 
-    #yesterday = (datetime.today() - timedelta(days = 1)).strftime("%B %d, %Y") #figure out yesterdays date
-    yesterday = "May 19, 2020"
+    yesterday = (datetime.today() - timedelta(days = 1)).strftime("%B %d, %Y") #figure out yesterdays date
+    
     send_email = False #assume by default that we do not want to send an email
 
     if yesterday == sell_dates[-1]:
