@@ -19,7 +19,12 @@ def email_list_signup(request):
                 return redirect("main:signup")
             else:
                 form.save()
-                messages.info(request, "INFO SUCCESSFULLY ADDED!")
+                messages.info(request, "INFO SUCCESSFULLY ADDED! CHECK EMAIL FOR CONFIRMATION MESSAGE")
+
+                #send confirmation email message
+                strategy_dict = {'GC' : 'Golden Cross', 'ATR' : 'ATR Limit Order'}
+                email_text = 'This message was sent to confirm that you signed up to be notified when the ' + str(strategy_dict[form.instance.strategy]) + ' strategy executes a trade on ' + str(form.instance.ticker) + '.'
+                send_mail('AlgoTracker Subscription Confirmation', email_text, 'noplif@gmail.com', [form.instance.email], fail_silently=False)
         else:
             messages.error(request, "AN ERROR OCCURED, PLEASE MAKE SURE INFORMATION IS FORMATTED CORRECTLY!")
         
@@ -37,7 +42,13 @@ def email_list_unsubscribe(request):
                 email_unsubscribe_qs = Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker, strategy=form.instance.strategy)
                 if email_unsubscribe_qs.exists():
                     Signup.objects.filter(email=form.instance.email, ticker=form.instance.ticker, strategy=form.instance.strategy).delete()
-                    messages.info(request, "INFO SUCCESSFULLY DELETED")
+                    messages.info(request, "INFO SUCCESSFULLY DELETED! CHECK EMAIL FOR CONFIRMATION MESSAGE")
+
+                    #send confirmation email message
+                    strategy_dict = {'GC' : 'Golden Cross', 'ATR' : 'ATR Limit Order'}
+                    email_text = 'This message was sent to confirm that you would no longer like to be notified when the ' + str(strategy_dict[form.instance.strategy]) + ' strategy executes a trade on ' + str(form.instance.ticker) + '.'
+                    send_mail('AlgoTracker Unsubscription Confirmation', email_text, 'noplif@gmail.com', [form.instance.email], fail_silently=False)
+
                     return redirect("main:unsubscribe")
                 else:
                     messages.error(request, "EMAIL/TICKER/STRATEGY COMBO DOES NOT EXIST!")
