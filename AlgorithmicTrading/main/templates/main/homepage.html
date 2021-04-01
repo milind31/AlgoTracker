@@ -1,0 +1,18 @@
+<head>
+    {% load static %}
+    <link href="{% static 'tinymce/css/prism.css' %}" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link href="{% static 'main/css/materialize.css' %}" rel="stylesheet">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+    {% include "main/includes/navbar.html" %}
+    <div class="container" style="text-align: center; padding-top: 35px;">
+        <h1>Welcome to AlgoTracker!</h1>
+        <p style="font-size: 145%;">Get email notifications when algorithmic trading strategies make trades!</p>
+        <img class="responsive-img" src="../../static/stonks.jpg" style="width:750px;height:450px;">
+        <p style="font-size: 235%;">Get started by looking at our <a href="/strategies/">available strategies</a></p>
+    </div>
+</body>

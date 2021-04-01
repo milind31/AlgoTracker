@@ -9,6 +9,7 @@
 
 <body>
     {% include "main/includes/navbar.html" %}
+
     <div class="container">
         <h1>Golden Cross</h1>
         <h3>How it works:</h3>
@@ -29,6 +30,7 @@
             <li>Try this out on steadily growing stocks</li>
         <h3 style="padding-top: 35px;">Test it out for yourself:</h3>
 
+
         <form method="POST">
             {% csrf_token %}
             {{form.as_p}}
@@ -38,11 +40,10 @@
 
         <a href="subscribe/" style="padding-bottom: 200px;">Click here to subscribe to be notified when to buy a stock based on the algorithm!</a>
 
+        {% include "main/includes/messages.html" %}
+
     </div>
-
-    {% include "main/includes/messages.html" %}
 </body>
-
 
 <script src="{% static 'tinymce/js/prism.js"></script>
 <script>M.AutoInit();</script>

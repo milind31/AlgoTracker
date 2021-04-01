@@ -89,7 +89,10 @@ def goldencross(request):
                   "main/strategies/goldencross/goldencross.html",
                   {'form':form})
 
-def home(request):
+def strategies(request):
     return render(request,
                   "main/strategies.html")
 
+def home(request):
+    return render(request,
+                  "main/homepage.html")
