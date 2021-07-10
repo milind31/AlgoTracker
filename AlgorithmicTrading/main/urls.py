@@ -24,5 +24,6 @@ urlpatterns = [
     path("goldencross/", views.goldencross, name="goldencross"),
     path("atrlimitorder/", views.atrlimitorder, name="atrlimitorder"),
     path("subscribe/", views.email_list_signup, name="signup"),
-    path("unsubscribe/", views.email_list_unsubscribe, name="unsubscribe")
+    path("unsubscribe/", views.email_list_unsubscribe, name="unsubscribe"),
+    path("subscribe/<strategy>/", views.email_list_strategy_signup, name="strategy_signup"),
 ]

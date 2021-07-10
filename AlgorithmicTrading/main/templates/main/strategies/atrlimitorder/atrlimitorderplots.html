@@ -1,6 +1,5 @@
 <head>
     {% load static %}
-    <link href="{% static 'tinymce/css/prism.css' %}" rel="stylesheet">
     <!-- Compiled and minified CSS -->
     <link href="{% static 'main/css/materialize.css' %}" rel="stylesheet">
     <!-- Compiled and minified JavaScript -->
@@ -17,6 +16,7 @@
 
             <button class="btn" type="submit">View Performance</button>
         </form>
+        <p><strong>(This may take a few seconds to load...)</strong></p>
 
         <div style="width:1000;height:500" onload="loading();">
             {{ buy_sell_graph|safe }}
@@ -34,13 +34,11 @@
             {{ total_cash_buy_hold_graph|safe }}
         </div>
 
-        <a href="subscribe/" style="padding-bottom: 200px;">Click here to subscribe to be notified when to buy a stock based on the algorithm!</a>
+        <a href="/subscribe/ATR/" style="padding-bottom: 200px;">Click here to subscribe to be notified when to buy a stock based on the algorithm!</a>
 
     </div>
 
     {% include "main/includes/messages.html" %}
 </body>
 
-
-<script src="{% static 'tinymce/js/prism.js"></script>
 <script>M.AutoInit();</script>

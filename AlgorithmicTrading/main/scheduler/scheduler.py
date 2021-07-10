@@ -14,10 +14,10 @@ def send_all_emails():
         send_email(signup.email, signup.ticker, signup.strategy)
     
 def start():
-    scheduler = BackgroundScheduler()
-    scheduler.add_jobstore(DjangoJobStore(), "default")
+    #scheduler = BackgroundScheduler()
+    #scheduler.add_jobstore(DjangoJobStore(), "default")
     #run send_all_emails once a day
-    scheduler.add_job(send_all_emails, 'interval', minutes=1440, name='send_all_emails', jobstore='default')
-    register_events(scheduler)
-    scheduler.start()
+    #scheduler.add_job(send_all_emails, 'interval', minutes=1440, name='send_all_emails', jobstore='default')
+    #register_events(scheduler)
+    #scheduler.start()
     print("Scheduler started...", file=sys.stdout)

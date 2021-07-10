@@ -1,9 +1,10 @@
 .strategies .strategy {
     padding-top: 1px;
+    padding-right: 1px;
     padding-left: 20px;
     padding-bottom: 20px;
-    margin-right: 485px;
     margin-bottom: 50px;
+    margin-right: 37%;
     box-shadow: 0 3px 3px rgba(0,0,0,0.1);
     transition: box-shadow 0.5s ease-in-out;
     color: black;
@@ -12,4 +13,37 @@
   .strategies .strategy:hover {
     box-shadow: 0 6px 6px rgba(0,0,0,0.4);
     transition: box-shadow 0.5s ease-in-out;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .loader {
+    display: none;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }
+  
+  .loading {
+    border: 2px solid #ccc;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border-top-color: #1ecd97;
+    border-left-color: #1ecd97;
+    animation: spin 1s infinite ease-in;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+  
+    100% {
+      transform: rotate(360deg);
+    }
   }
