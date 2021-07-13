@@ -2,6 +2,7 @@
     {% load static %}
     <!-- Compiled and minified CSS -->
     <link href="{% static 'main/css/materialize.css' %}" rel="stylesheet">
+    <link href="{% static 'main/css/custom.css' %}" rel="stylesheet">
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
@@ -14,8 +15,11 @@
             {% csrf_token %}
             {{form.as_p}}
 
-            <button class="btn" type="submit">View Performance</button>
+            <button class="btn" id="view-performance" type="submit" onclick="showLoader()">View Performance</button>
         </form>
+        <div id="spinner" class="spinner" style="padding:0px 65px 0px 65px;display:none;">
+            <div class="circle"></div>
+        </div>
         <p><strong>(This may take a few seconds to load...)</strong></p>
 
         <div style="width:1000;height:500" onload="loading();">
@@ -42,3 +46,9 @@
 </body>
 
 <script>M.AutoInit();</script>
+<script>
+    function showLoader() {
+        document.getElementById('view-performance').style.display = "none";
+        document.getElementById('spinner').style.display = "block";
+    }
+</script>
