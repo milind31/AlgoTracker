@@ -37,9 +37,7 @@
 
             <button class="btn" id="view-performance" type="submit" onclick="showLoader()">View Performance</button>
         </form>
-        <div id="spinner" class="spinner" style="padding:0px 65px 0px 65px;display:none;">
-            <div class="circle"></div>
-        </div>
+        <div id="loading" class="loading" data-load="loading"></div>
         <p><strong>(This may take a few seconds to load...)</strong></p>
 
         <a href="/subscribe/GC" style="padding-bottom: 200px;">Click here to subscribe to be notified when to buy a stock based on the algorithm!</a>
@@ -53,6 +51,6 @@
 <script>
     function showLoader() {
         document.getElementById('view-performance').style.display = "none";
-        document.getElementById('spinner').style.display = "block";
+        document.getElementById('loading').style.display = "block";
     }
 </script>
