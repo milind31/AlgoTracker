@@ -1,5 +1,6 @@
 from django.db import models
 
+#email mailing list signups
 class Signup(models.Model):
     email = models.EmailField()
     ticker = models.CharField(max_length=5, default = 'VTI')

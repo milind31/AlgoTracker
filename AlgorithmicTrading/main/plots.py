@@ -7,6 +7,7 @@ import backtrader as bt
 import pandas as pd
 from datetime import datetime, timedelta
 
+#create all four plots
 def make_plots(sell_dates, buy_dates, cash, ticker, hist):
     hist['Date'] = hist.index #create date column from dataframe index
     sell_prices = [hist['Close'][date] for date in sell_dates]
@@ -16,67 +17,76 @@ def make_plots(sell_dates, buy_dates, cash, ticker, hist):
         net_gain_or_loss = sell_prices[i] - buy_prices[i]
         pct_changes.append((net_gain_or_loss/buy_prices[i])*100)
 
+    #BUY SELL GRAPH
     buy_sell_fig = px.line(hist, x="Date", y="Close", title='Historical Buy/Sell Graph for {}'.format(ticker))
     buy_sell_fig.add_trace(
         go.Scatter(
-        x=sell_dates,
-        y=sell_prices,
-        mode='markers',
-        marker=dict
-        (
-        color='Red',
-        size=10
-        ),
-        name='Sell')
+            x=sell_dates,
+            y=sell_prices,
+            mode='markers',
+            marker=dict
+            (
+            color='Red',
+            size=10
+            ),
+            name='Sell'
+        )
     )
     buy_sell_fig.add_trace(
         go.Scatter(
-        x=buy_dates,
-        y=buy_prices,
-        mode='markers',
-        marker=dict
-        (
-        color='mediumspringgreen',
-        size=10
-        ),
-        name='Buy')
+            x=buy_dates,
+            y=buy_prices,
+            mode='markers',
+            marker=dict
+            (
+            color='mediumspringgreen',
+            size=10
+            ),
+            name='Buy'
+        )
     )
+    #END BUY/SELL GRAPH
     
+    #GAIN/LOSS GRAPH
     outcomes = ["Gain" if pct_change > 0 else "Loss" for pct_change in pct_changes]
     df = pd.DataFrame({'a':cash, 'sell_dates':sell_dates, 'pct_changes':pct_changes, 'outcomes':outcomes})
     gain_loss_fig = px.scatter(data_frame= df,x='sell_dates', y='pct_changes',
-                               color='outcomes',
-                               color_discrete_map={'Gain': '#7386e6', 'Loss':'red'},
-                               title="Percent Gain/Loss for Trades",
-                               labels={
-                               "sell_dates": "Date",
-                               "pct_changes": "Percent Gain/Loss",
-                               "outcomes": "",
-                               "a": "Total Cash"
-                               },
-                               size_max=10,
-                               size=[1 for i in sell_dates],
-                               hover_data="a"
+                                    color='outcomes',
+                                    color_discrete_map={'Gain': '#7386e6', 'Loss':'red'},
+                                    title="Percent Gain/Loss for Trades",
+                                    labels={
+                                    "sell_dates": "Date",
+                                    "pct_changes": "Percent Gain/Loss",
+                                    "outcomes": "",
+                                    "a": "Total Cash"
+                                    },
+                                    size_max=10,
+                                    size=[1 for i in sell_dates],
+                                    hover_data="a"
                                )
+    #END GAIN/LOSS GRAPH
     
+    #TOTAL CASH GRAPH
     total_cash_fig = px.line(data_frame= df,x='sell_dates', y='a',
-                        title="Total Cash After Each Sell ($10,000 Initial Investment)",
-                        labels={
-                            "sell_dates": "Date",
-                            "a": "Cash",
-                        }
-                        )
+                                title="Total Cash After Each Sell ($10,000 Initial Investment)",
+                                labels={
+                                    "sell_dates": "Date",
+                                    "a": "Cash",
+                                }
+                            )
+    #END TOTAL CASH GRAPH
 
     shares_bought = math.floor(10000 / hist['Close'][0])
     leftover_cash = 10000 -  (shares_bought * hist['Close'][0])
     total_cash_buy_hold_fig = px.line(x=hist['Date'], y=shares_bought * hist['Close'] + leftover_cash,
-                                      title="Total Cash with Buy Hold Strategy ($10,000 Initial Investment)",
-                                      labels={
-                                          'x':"Date",
-                                          'y':"Total Cash"
-                                      }
+                                            title="Total Cash with Buy Hold Strategy ($10,000 Initial Investment)",
+                                            labels={
+                                                'x':"Date",
+                                                'y':"Total Cash"
+                                            }
                                       )
-
+    #END BUY/HOLD GRAPH
+    
     buy_sell_graph = plotly.offline.plot(buy_sell_fig, auto_open = False, output_type="div")
     gain_loss_graph = plotly.offline.plot(gain_loss_fig, auto_open = False, output_type="div")
     total_cash_graph = plotly.offline.plot(total_cash_fig, auto_open = False, output_type="div")
@@ -96,8 +106,9 @@ def get_plots(ticker, strategy):
     #define strategies
     class ATR(bt.Strategy):
         params = (('n', 50), ('order_percentage', 1))
-        
-        def log(self, txt, order_type, dt=None):
+
+        #update buy/sell dates
+        def log(self, order_type, dt=None):
             dt = dt or self.datas[0].datetime.date(0)
             if order_type == 'Buy':
                 buy_dates.append(dt.isoformat())
@@ -115,13 +126,14 @@ def get_plots(ticker, strategy):
             
             if order.status in [order.Completed]:
                 if order.isbuy():
-                    self.log('BUY EXECUTED {}'.format(order.executed.price), 'Buy')
+                    self.log('Buy')
                 elif order.issell():
-                    self.log('SELL EXECUTED {}'.format(order.executed.price), 'Sell')
+                    self.log('Sell')
                 self.bar_executed = len(self)
 
             self.order = None
         
+        #execute strategy every day
         def next(self):
             if self.position.size == 0:
                 if self.data.close[0] > self.n_day_high[-1]:
@@ -142,9 +154,10 @@ def get_plots(ticker, strategy):
                     self.close()
 
     class GoldenCross(bt.Strategy):
-        params = (('fast', 50), ('slow', 200), ('order_percentage', 1), ('ticker', 'VOO'))
+        params = (('fast', 50), ('slow', 200), ('order_percentage', 1))
         
-        def log(self, txt, order_type, dt=None):
+        #update buy/sell dates
+        def log(self, order_type, dt=None):
             dt = dt or self.datas[0].datetime.date(0)
             if order_type == 'Buy':
                 buy_dates.append(dt.isoformat())
@@ -167,26 +180,23 @@ def get_plots(ticker, strategy):
             
             if order.status in [order.Completed]:
                 if order.isbuy():
-                    self.log('BUY EXECUTED {}'.format(order.executed.price), 'Buy')
+                    self.log('Buy')
                 elif order.issell():
-                    self.log('SELL EXECUTED {}'.format(order.executed.price), 'Sell')
+                    self.log('Sell')
                 self.bar_executed = len(self)
 
             self.order = None
         
+        #execute strategy every day
         def next(self):
             if self.position.size == 0:
                 if self.crossover > 0:
                     amount_to_invest = (self.params.order_percentage * self.broker.cash)
-                    self.size = math.floor(amount_to_invest / self.data.close)
-                    
-                    print("BUY {} SHARES OF {} AT {} on {}".format(self.size, self.params.ticker, round(self.data.close[0],2), self.datetime.date(ago=0)))
-                    
+                    self.size = math.floor(amount_to_invest / self.data.close)                    
                     self.buy(size=self.size)
             
             if self.position.size > 0:
                 if self.crossover < 0:
-                    print("SELL {} SHARES OF {} AT {} on {}".format(self.size, self.params.ticker, round(self.data.close[0],2), self.datetime.date(ago=0)))
                     self.close()
 
     cerebro = bt.Cerebro()
