@@ -8,7 +8,7 @@ def send_email(to, subject, text):
         subject=subject,
         html_content=text)
     try:
-        sg = SendGridAPIClient('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')
+        sg = SendGridAPIClient('XXXXXXXXXXXXXXXXXXXXXX')
         response = sg.send(message)
     except Exception as e:
         print(e.message)
